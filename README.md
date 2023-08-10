@@ -1,7 +1,3 @@
-**Repository Name:** OctavePlayground
-
-**README.md:**
-
 # Octave Playground
 
 Welcome to the OctaveMATLAB Playground repository! 🎉 This is a collection of
