@@ -1,9 +1,9 @@
-# FoV Elements Subproject
+# FoV Elements Project
 
-Welcome to the **FoV Elements** subproject! This repository contains a
-collection of algorithms and functions that focus on various aspects of working
-with Field of View (FoV) manipulation and analysis. The primary objectives of
-this subproject are outlined below:
+Welcome to the **FoV Elements** project! This repository contains a collection
+of algorithms and functions that focus on various aspects of working with
+Field of View (FoV) manipulation and analysis. The primary objectives of this
+project are outlined below:
 
 ## Objectives
 
@@ -32,7 +32,7 @@ this subproject are outlined below:
 
 ## Contents
 
-The subproject is structured as follows:
+The project is structured as follows:
 
 - **`./Make_Dummy_Fov.m`**: This file contains the source code for the
 computational FoV generation mentioned above. The FoV is specified by its width
@@ -71,7 +71,7 @@ within the provided FoV. Example:
       0   1   1   1   0
       0   0   0   0   0
 
->>
+   >>
    ```
 
 - **`./Roi_2_Plot.m`**: This file contains the source code for the general
