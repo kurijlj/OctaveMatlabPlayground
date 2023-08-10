@@ -24,4 +24,4 @@ jobs:
       - name: Run code analysis
         run: |
           # Check the code with miss_hit
-          mh_style.exe --octave 7.2
+          mh_style --octave 7.2
