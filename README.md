@@ -2,7 +2,6 @@
 
 **README.md:**
 
-```markdown
 # Octave Playground
 
 Welcome to the OctaveMATLAB Playground repository! 🎉 This is a collection of
