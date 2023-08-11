@@ -30,6 +30,15 @@ ROI on given axes, and to provide a comprehensive test suite that covers all the
 aforementioned algorithms. For more details check the 'README.md' file provided
 in the project directory.
 
+- **Radiochromic Toolbox:** is a comprehensive set of tools developed within the
+Octave/MATLAB environment that serves as a valuable resource for the
+manipulation and analysis of radiochromic film scans.
+
+At its core, the 'Radiochromic Toolbox' is designed to streamline and enhance
+the process of handling radiochromic film scans. The toolbox comprises a
+well-organized collection of classes and functions, meticulously crafted to
+facilitate the efficient manipulation and detailed analysis of these film scans.
+
 ## Getting Started
 
 To start exploring the projects in this repository, follow these steps:
