@@ -6,8 +6,7 @@ function roi = Roi_2_Fov(varargin)
     %% -------------------------------------------------------------------------
     %
     %% Use:
-    %       - roi = Roi_2_Fov(fov_w, fov_h, roi_x,
-    %       roi_y, roi_w, roi_h)
+    %       - roi = Roi_2_Fov(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
     %
     %% Description:
     %       This function recalculates the coordinates and dimensions of the
@@ -111,6 +110,6 @@ function roi = Roi_2_Fov(varargin)
     roi(2) = max(roi_y, y0);
     roi(2) = min(roi_y, y0 + fov_h - roi_h);
 
-end  % End of Roi_2_Fov
+end  % End of function Roi_2_Fov
 
 % End of file Roi_2_Fov.m
