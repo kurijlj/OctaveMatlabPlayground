@@ -66,6 +66,7 @@ function csfp = Select_Scan_Files(varargin)
     %           }
     %
     %% (C) Copyright 2023 Ljubomir Kurij
+    %
     %% -------------------------------------------------------------------------
     fname = 'Select_Scan_Files';
     use_case_a = sprintf(' -- csfp = %s()', fname);
