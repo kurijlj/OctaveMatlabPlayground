@@ -1,19 +1,19 @@
 function Roi_2_Plot(varargin)
-    %% -------------------------------------------------------------------------
-    %%
-    %% Function: Roi_2_Plot(hax, p0, q0, w, h, varargin)
-    %%
-    %% -------------------------------------------------------------------------
+    % --------------------------------------------------------------------------
     %
-    %% Use:
+    % Function: Roi_2_Plot(hax, p0, q0, w, h, varargin)
+    %
+    % --------------------------------------------------------------------------
+    %
+    % Use:
     %       - Roi_2_Plot(hax, p0, q0, w, h)
     %       - Roi_2_Plot(hax, p0, q0, w, h, 'color', 'r')
     %
-    %% Description:
+    % Description:
     %       This function plots the given ROI (Region of Interest) on the
     %       given axes with FoV plotted as the pixmap.
     %
-    %% Function parameters:
+    % Function parameters:
     %       - hax: handle to the axes where the ROI will be plotted
     %       - p0, q0: origin of the ROI (in pixels)
     %       - w, h: dimensions (width and height) of the ROI (in pixels)
@@ -21,18 +21,33 @@ function Roi_2_Plot(varargin)
     %                on how to specify color parameter see the documentation of
     %                the 'plot' function.
     %
-    %% Return:
+    % Return:
     %       - none
     %
-    %% Examples:
+    % Examples:
     %       >> hfig = figure();
     %       >> hax = axes('parent', hfig);
     %       >> Roi_2_Plot(hax, 10, 10, 50, 50)
     %       >> Roi_2_Plot(hax, 10, 10, 50, 50, 'color', 'g')
     %
-    %% (C) Copyright 2023 Ljubomir Kurij
+    % (C) Copyright 2023 Ljubomir Kurij <ljubomir_kurij@protonmail.com>
+    % This file is part of FoV Elements version 1.0.0
     %
-    %% -------------------------------------------------------------------------
+    % This program is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    %
+    % This program is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU General Public License for more details.
+    %
+    % You should have received a copy of the GNU General Public License
+    % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    %
+    % --------------------------------------------------------------------------
+
     fname = 'Roi_2_Plot';
     use_case_a = sprintf( ...
                          ' -- %s(hax, p0, q0, w, h)', ...

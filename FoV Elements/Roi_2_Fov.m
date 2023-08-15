@@ -1,29 +1,29 @@
 function roi = Roi_2_Fov(varargin)
-    %% -------------------------------------------------------------------------
-    %%
-    %% Function: Roi_2_Fov(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
-    %%
-    %% -------------------------------------------------------------------------
+    % --------------------------------------------------------------------------
     %
-    %% Use:
+    % Function: Roi_2_Fov(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
+    %
+    % --------------------------------------------------------------------------
+    %
+    % Use:
     %       - roi = Roi_2_Fov(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
     %
-    %% Description:
+    % Description:
     %       This function recalculates the coordinates and dimensions of the
     %       given ROI (Region of Interest) so that given ROI fits inside the
     %       given FoV (Field of View).
     %
-    %% Function parameters:
+    % Function parameters:
     %       - fov_w, fov_h: dimensions (width and height) of the FoV (in pixels)
     %       - roi_x, roi_y: origin of the ROI (in pixels) relative to the FoV
     %       - roi_w, roi_h: dimensions (width and height) of the ROI (in pixels)
     %
-    %% Return:
+    % Return:
     %       - roi: a column vector containing the coordinates and dimensions of
     %              the ROI (in pixels) relative to the FoV in the following
     %              order: [roi_x; roi_y; roi_w; roi_h]
     %
-    %% Examples:
+    % Examples:
     %       >> Roi_2_Fov(100, 100, 10, 10, 50, 50)
     %       ans =
     %           10   10   50   50
@@ -40,9 +40,24 @@ function roi = Roi_2_Fov(varargin)
     %       ans =
     %           0    0   100   100
     %
-    %% (C) Copyright 2023 Ljubomir Kurij
+    % (C) Copyright 2023 Ljubomir Kurij <ljubomir_kurij@protonmail.com>
+    % This file is part of FoV Elements version 1.0.0
     %
-    %% -------------------------------------------------------------------------
+    % This program is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    %
+    % This program is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU General Public License for more details.
+    %
+    % You should have received a copy of the GNU General Public License
+    % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    %
+    % --------------------------------------------------------------------------
+
     fname = 'Roi_2_Fov';
     use_case_a = sprintf( ...
                          cstrcat( ...

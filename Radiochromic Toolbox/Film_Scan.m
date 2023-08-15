@@ -1,15 +1,15 @@
 classdef Film_Scan
-    %% -------------------------------------------------------------------------
-    %%
-    %% Class: Film_Scan
-    %%
-    %% -------------------------------------------------------------------------
+    % --------------------------------------------------------------------------
     %
-    %% Description:
-    %       - This class is used to store the information of a radiochromic film
-    %         scan.
+    % Class: Film_Scan
     %
-    %% Properties:
+    % --------------------------------------------------------------------------
+    %
+    % Description:
+    %       This class is used to store the information of a radiochromic
+    %       film scan.
+    %
+    % Properties:
     %       - date_of_irradiation: serial date number (see: datenum), def. NaN
     %             Date of irradiation of the film, if known. The date of
     %             irradiation must be no older than 01-Jan-2000.
@@ -143,8 +143,7 @@ classdef Film_Scan
     %                 analysis, e.g. a scan of a film piece that is not used for
     %                 the dose measurement.
     %
-    %
-    %% Constructor parameters:
+    % Constructor parameters:
     %
     %       Positional parameters:
     %       - tif_file: string
@@ -179,7 +178,7 @@ classdef Film_Scan
     %             above parameters. If the 'DeadPixels' or 'DummyDeadPixels'
     %             types are used, the 'Smoothing' parameter is ignored.
     %
-    %       Optional parameters:
+    %       Named parameters:
     %       - DateOfIrradiation: serial date number (see: datenum), def. NaN
     %             Date of irradiation of the film. See 'date_of_irradiation'
     %             property for more information.
@@ -228,7 +227,7 @@ classdef Film_Scan
     %             must be of the class Pixel_Value_Smoothing. For more
     %             information see the Pixel_Value_Smoothing class.
     %
-    %% Public methods:
+    % Public methods:
     %
     %       - obj = Film_Scan(varargin): Class constructor.
     %
@@ -292,24 +291,29 @@ classdef Film_Scan
     %             Parameter 'y' must be a positive integer in the range of 1 to
     %             the height of the scan.
     %
-    %       - hax = in_plot(obj, x): Plots the pixel values along the given
-    %             column of the scan and returns the handle to the axes object
-    %             of the plot. The method is used to plot the pixel values along
-    %             the given column of the scan. Parameter 'x' must be a positive
-    %             integer in the range of 1 to the width of the scan.
+    %       - hax = in_plot(obj, x, 'parent', hax): Plots the pixel values along
+    %             the given column of the scan and returns the handle to the
+    %             axes object of the plot. The method is used to plot the pixel
+    %             values along the given column of the scan. Parameter 'x' must
+    %             be a positive integer in the range of 1 to the width of the
+    %             scan. If the optional parameter 'parent' is given, the plot
+    %             will be created in the given axes object. Otherwise, the plot
+    %             will be created in a new figure.
     %
-    %       - hax = cross_plot(obj, y): Plots the pixel values along the given
-    %             row of the scan and returns the handle to the axes object of
-    %             the plot. The method is used to plot the pixel values along
-    %             the given row of the scan. Parameter 'y' must be a positive
-    %             integer in the range of 1 to the height of the scan.
+    %       - hax = cross_plot(obj, y, 'parent', hax): Plots the pixel values
+    %             along the given row of the scan and returns the handle to the
+    %             axes object of the plot. The method is used to plot the pixel
+    %             values along the given row of the scan. Parameter 'y' must be
+    %             a positive integer in the range of 1 to the height of the
+    %             scan. If the optional parameter 'parent' is given, the plot
+    %             will be created in the given axes object. Otherwise, the plot
+    %             will be created in a new figure.
     %
     %       - hax = imshow(obj): Plots the scan and returns the handle to the
     %             axes object of the plot. The method is used to plot the scan
-    %             on the screen.
+    %             on the screen. The plot is created in a new figure.
     %
-    %
-    %% Static methods:
+    % Static methods:
     %
     %       - obj = from_file(tif_file): Returns a Film_Scan object created from
     %             the given tif file.
@@ -328,12 +332,11 @@ classdef Film_Scan
     %
     %       - list_resolution_units(): Display the list of supported resolution
     %             units on the screen.
-
+    %
     %       - list_scan_types(): Display the list of supported scan types on
     %             the screen.
     %
-    %
-    %% Example:
+    % Example:
     %
     %       % Create a Film_Scan object from a tif file
     %       scan = Film_Scan.from_file('path/to/scan.tif');
@@ -350,11 +353,23 @@ classdef Film_Scan
     %       % Display the list of supported irradiation types
     %       Film_Scan.list_irradiation_types();
     %
+    % (C) Copyright 2023 Ljubomir Kurij <ljubomir_kurij@protonmail.com>
+    % This file is part of Radiochromic Toolbox version 0.1.0
     %
-    %% (C) Copyright 2023 Ljubomir Kurij
+    % This program is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
     %
-    %% -------------------------------------------------------------------------
-
+    % This program is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU General Public License for more details.
+    %
+    % You should have received a copy of the GNU General Public License
+    % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    %
+    % --------------------------------------------------------------------------
 
 end  % End of classdef Film_Scan
 

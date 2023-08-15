@@ -1,32 +1,47 @@
 function bw = Roi_2_Bw(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
-    %% -------------------------------------------------------------------------
-    %%
-    %% Function: Roi_2_Bw(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
-    %%
-    %% -------------------------------------------------------------------------
+    % --------------------------------------------------------------------------
     %
-    %% Use:
+    % Function: Roi_2_Bw(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
+    %
+    % --------------------------------------------------------------------------
+    %
+    % Use:
     %       - bw = Roi_2_Bw(fov_w, fov_h, roi_x, roi_y, roi_w, roi_h)
     %
-    %% Description:
+    % Description:
     %       Convert a Region of Interest (ROI) to a binary image (bw) for the
     %       given Field of View (FoV).
     %
-    %% Function parameters:
+    % Function parameters:
     %       - fov_w, fov_h: dimensions (width and height) of the FoV (in pixels)
     %       - roi_x, roi_y: origin of the ROI (in pixels) relative to the FoV
     %       - roi_w, roi_h: dimensions (width and height) of the ROI (in pixels)
     %
-    %% Return:
+    % Return:
     %       - bw: binary image (logical matrix) of the ROI
     %
-    %% Examples:
+    % Examples:
     %       >> mask = Roi_2_Bw(100, 100, 10, 10, 50, 50);
     %       >> imshow(mask);
     %
-    %% (C) Copyright 2023 Ljubomir Kurij
+    % (C) Copyright 2023 Ljubomir Kurij <ljubomir_kurij@protonmail.com>
+    % This file is part of FoV Elements version 1.0.0
     %
-    %% -------------------------------------------------------------------------
+    % This program is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    %
+    % This program is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU General Public License for more details.
+    %
+    % You should have received a copy of the GNU General Public License
+    % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    %
+    % --------------------------------------------------------------------------
+
     fname = "Roi_2_Bw";
     use_case_a = sprintf( ...
                          cstrcat( ...

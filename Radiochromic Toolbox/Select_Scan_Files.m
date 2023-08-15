@@ -1,22 +1,22 @@
 function csfp = Select_Scan_Files(varargin)
-    %% -------------------------------------------------------------------------
-    %%
-    %% Function: Select_Scan_Files(dt, flt)
-    %%
-    %% -------------------------------------------------------------------------
+    % --------------------------------------------------------------------------
     %
-    %  Use:
+    % Function: Select_Scan_Files(dt, flt)
+    %
+    % --------------------------------------------------------------------------
+    %
+    % Use:
     %       -- csfp = Select_Scan_Files()
     %       -- csfp = Select_Scan_Files(dt)
     %       -- csfp = Select_Scan_Files(dt, flt)
     %
-    %% Description:
+    % Description:
     %       Return a cell array containig absolute paths to the selected scan
     %       files. It invokes 'uigetfile' function to provide GUI interface for
     %       multiple files selection. If 'Cancel' is selected, empty cell array
     %       is returned.
     %
-    %% Function parameters:
+    % Function parameters:
     %       - dt:  string, def. 'Select Scan Files'
     %              Can be used to customize the dialog title.
     %       - flt: two-column cell array of strings, def. {'*.tif',
@@ -25,11 +25,11 @@ function csfp = Select_Scan_Files(varargin)
     %              and file descriptions pairs. See the help on 'uigetfile' for
     %              detail description.
     %
-    %% Return:
+    % Return:
     %       - csfp: cell array of strings containing absolute paths to the
     %               selected scan files
     %
-    %% Examples:
+    % Examples:
     %       >> Select_Scan_Files()
     %       ans =
     %           {
@@ -65,9 +65,24 @@ function csfp = Select_Scan_Files(varargin)
     %             ...
     %           }
     %
-    %% (C) Copyright 2023 Ljubomir Kurij
+    % (C) Copyright 2023 Ljubomir Kurij <ljubomir_kurij@protonmail.com>
+    % This file is part of Radiochromic Toolbox version 0.1.0
     %
-    %% -------------------------------------------------------------------------
+    % This program is free software: you can redistribute it and/or modify
+    % it under the terms of the GNU General Public License as published by
+    % the Free Software Foundation, either version 3 of the License, or
+    % (at your option) any later version.
+    %
+    % This program is distributed in the hope that it will be useful,
+    % but WITHOUT ANY WARRANTY; without even the implied warranty of
+    % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    % GNU General Public License for more details.
+    %
+    % You should have received a copy of the GNU General Public License
+    % along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    %
+    % --------------------------------------------------------------------------
+
     fname = 'Select_Scan_Files';
     use_case_a = sprintf(' -- csfp = %s()', fname);
     use_case_b = sprintf(' -- csfp = %s(dt)', fname);
