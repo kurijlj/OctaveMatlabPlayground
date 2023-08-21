@@ -1,40 +1,40 @@
-function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
+function rpd = IUFWT_2(ac, vc, hc, dc, wt, fbi, scaling)
     % --------------------------------------------------------------------------
     %
-    % Function: UFWT_2(f, w, fi, scaling)
+    % Function: IUFWT_2(ac, vc, hc, dc, wt, fbi, scaling)
     %
     % --------------------------------------------------------------------------
     %
     % Use:
-    %       -- f = IUFWT_2(ac, vc, hc, dc, w, fi)
-    %       -- f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
+    %       -- f = IUFWT_2(ac, vc, hc, dc, wt, fbi)
+    %       -- f = IUFWT_2(ac, vc, hc, dc, wt, fbi, scaling)
     %
     % Description:
     %      Compute the inverse 2D wavelet transform for the given coefficients
-    %      matrices using the wavelet filterbank w and the number fi of
+    %      matrices using the wavelet filterbank wt and the number fbi of
     %      filterbank iterations.
     %
     % Function parameters:
-    %       -- ac: residual approximation coefficients stored in L x W matrix.
+    %       -- ac: residual approximation coefficients stored in H x W matrix.
     %       -- vc: vertical detail coefficients stored in
-    %             fi x (filtNo - 1) x L x W matrix.
+    %             fbi x (filt_no - 1) x H x W matrix.
     %       -- hc: horizontal detail coefficients stored in
-    %             fi x (filtNo - 1) x L x W matrix.
+    %             fbi x (filt_no - 1) x H x W matrix.
     %       -- dc: diagonal detail coefficients stored in
-    %             fi x (filtNo - 1) x (filtNo - 1) x L x W matrix.
-    %       -- w: wavelet filterbank
-    %       -- fi: number of filterbank iterations
+    %             fbi x (filt_no - 1) x (filt_no - 1) x H x W matrix.
+    %       -- wt: wavelet filterbank
+    %       -- fbi: number of filterbank iterations
     %       -- scaling: filter scaling flag (default: 'sqrt')
     %
     % Return:
-    %       -- f: reconstructed image
+    %       -- rpd: reconstructed image
     %
     % Required packages:
     %       -- ltfat (http://ltfat.org)
     %
     % Example:
-    %       -- f = IUFWT_2(ac, vc, hc, dc, w, fi)
-    %       -- f = IUFWT_2(ac, vc, hc, dc, w, fi, 'sqrt')
+    %       -- rpd = IUFWT_2(ac, vc, hc, dc, wt, fbi)
+    %       -- rpd = IUFWT_2(ac, vc, hc, dc, wt, fbi, 'sqrt')
     %
     % Copyright (C) 2005-2022 Peter L. Soendergaard <peter@sonderport.dk>
     % and others.
@@ -58,8 +58,14 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
     % --------------------------------------------------------------------------
 
     fname = 'IUFWT_2';
-    use_case_a = sprintf(' -- f = %s(ac, vc, hc, dc, w, fi)', fname);
-    use_case_b = sprintf(' -- f = %s(ac, vc, hc, dc, w, fi, scaling)', fname);
+    use_case_a = sprintf(' -- rpd = %s(ac, vc, hc, dc, wt, fbi)', fname);
+    use_case_b = sprintf( ...
+                         cstrcat( ...
+                                 ' -- rpd = %s(ac, vc, hc, dc, wt, fbi, ', ...
+                                 'scaling)' ...
+                                ), ...
+                         fname ...
+                        );
 
     % Add the ltfat package to the path ----------------------------------------
     pkg load ltfat;
@@ -80,7 +86,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
 
     % Validate value(s) supplied for the wavelet filterbank definition
     try
-        w = fwtinit(w);
+        wt = fwtinit(wt);
 
     catch err
         error( ...
@@ -95,19 +101,19 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
     % wavelet filters? If your filterbank has different subsampling factors
     % after first two filters, please send a feature request.
     assert( ...
-           w.a(1) == w.a(2), ...
+           wt.a(1) == wt.a(2), ...
            cstrcat( ...
-                   'First two elements of a vector w.a are not equal. ', ...
+                   'First two elements of a vector wt.a are not equal. ', ...
                    'Such wavelet filterbank is not suported.' ...
                   ) ...
           );
 
     % For holding the time-reversed, complex conjugate impulse responses.
-    filtNo = length(w.g);
+    filt_no = length(wt.g);
 
     % Validate value supplied for the number of filterbank iterations
     validateattributes( ...
-                       fi, ...
+                       fbi, ...
                        {'numeric'}, ...
                        { ...
                         'scalar', ...
@@ -119,7 +125,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                         '>=', 1 ...
                        }, ...
                        fname, ...
-                       'fi' ...
+                       'fbi' ...
                       );
 
     % Validate input coeficients format
@@ -136,7 +142,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                        'ac' ...
                       );
 
-    [L, W] = size(ac);
+    [H, W] = size(ac);
 
     validateattributes( ...
                        vc, ...
@@ -151,17 +157,17 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                        'vc' ...
                       );
 
-    if fi ~= size(vc, 1)
+    if fbi ~= size(vc, 1)
         error( ...
               cstrcat( ...
                       fname, ...
                       ': Number of levels in the coefficients matrix vc ', ...
                       ' does not match given number of filterbank ', ...
-                      'iterations fi.' ...
+                      'iterations fbi.' ...
                      ) ...
              );
 
-    elseif filtNo - 1 ~= size(vc, 2)
+    elseif filt_no - 1 ~= size(vc, 2)
         error( ...
               cstrcat( ...
                       fname, ...
@@ -171,7 +177,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                      ) ...
              );
 
-    elseif L ~= size(vc, 3) || W ~= size(vc, 4)
+    elseif H ~= size(vc, 3) || W ~= size(vc, 4)
         error( ...
               cstrcat( ...
                       fname, ...
@@ -180,7 +186,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                      ) ...
              );
 
-    end  % End of if fi ~= size(vc, 1)
+    end  % End of if fbi ~= size(vc, 1)
 
     validateattributes( ...
                        hc, ...
@@ -195,17 +201,17 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                        'hc' ...
                       );
 
-    if fi ~= size(hc, 1)
+    if fbi ~= size(hc, 1)
         error( ...
               cstrcat( ...
                       fname, ...
                       ': Number of levels in the coefficients matrix hc ', ...
                       'does not match given number of filterbank ', ...
-                      'iterations fi.' ...
+                      'iterations fbi.' ...
                      ) ...
              );
 
-    elseif filtNo - 1 ~= size(hc, 2)
+    elseif filt_no - 1 ~= size(hc, 2)
         error( ...
               cstrcat( ...
                       fname, ...
@@ -215,7 +221,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                      ) ...
              );
 
-    elseif L ~= size(hc, 3) || W ~= size(hc, 4)
+    elseif H ~= size(hc, 3) || W ~= size(hc, 4)
         error( ...
               cstrcat( ...
                       fname, ...
@@ -224,7 +230,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                      ) ...
              );
 
-    end  % End of if fi ~= size(hc, 1)
+    end  % End of if fbi ~= size(hc, 1)
 
     validateattributes( ...
                        dc, ...
@@ -239,17 +245,17 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                        'dc' ...
                       );
 
-    if fi ~= size(dc, 1)
+    if fbi ~= size(dc, 1)
         error( ...
               cstrcat( ...
                       fname, ...
                       ': Number of levels in the coefficients matrix ', ...
                       'dc does not match given number of filterbank ', ...
-                      'iterations fi.' ...
+                      'iterations fbi.' ...
                      ) ...
              );
 
-    elseif filtNo - 1 ~= size(dc, 2) || filtNo - 1 ~= size(dc, 3)
+    elseif filt_no - 1 ~= size(dc, 2) || filt_no - 1 ~= size(dc, 3)
         error( ...
               cstrcat( ...
                       fname, ...
@@ -259,7 +265,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                      ) ...
              );
 
-    elseif L ~= size(dc, 4) || W ~= size(dc, 5)
+    elseif H ~= size(dc, 4) || W ~= size(dc, 5)
         error( ...
               cstrcat( ...
                       fname, ...
@@ -268,7 +274,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                      ) ...
              );
 
-    end  % End of if fi ~= size(dc, 1)
+    end  % End of if fbi ~= size(dc, 1)
 
     % Set default value for the filter scaling if not supplied
     if 6 == nargin
@@ -296,24 +302,24 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
     %  Run computation ---------------------------------------------------------
 
     % For holding the impulse responses.
-    gOffset = cellfun(@(gEl) gEl.offset, w.g(:));
+    gOffset = cellfun(@(gEl) gEl.offset, wt.g(:));
 
     % Optionally scale the filters
-    g = comp_filterbankscale(w.g(:), w.a(:), scaling);
+    g = comp_filterbankscale(wt.g(:), wt.a(:), scaling);
 
     % Change format to a matrix
     gMat = cell2mat(cellfun(@(gEl) gEl.h(:), g(:)', 'UniformOutput', 0));
 
     % Allocate mid result
-    d = zeros(L, filtNo, W);
-    e = zeros(filtNo, W, filtNo, L, assert_classname(ac, gMat));
+    d = zeros(H, filt_no, W);
+    e = zeros(filt_no, W, filt_no, H, assert_classname(ac, gMat));
 
     % Read top-level appr. coefficients.
     ca = ac;
     jj = 1;
-    while fi >= jj
+    while fbi >= jj
         % Current iteration filter upsampling factor.
-        filtUps = w.a(1)^(fi - jj);
+        filtUps = wt.a(1)^(fbi - jj);
 
         % Zero index position of the upsampled filetrs.
         offset = filtUps .* gOffset;  % + filtUps;
@@ -322,18 +328,18 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
 
         % Reconstruct rows
         kk = 1;
-        while filtNo >= kk
+        while filt_no >= kk
             ll = 1;
-            while filtNo >= ll
+            while filt_no >= ll
                 if 1 == kk
                     if 1 == ll
-                        e(1, :, 1, :) = reshape(ca', 1, W, 1, L);
+                        e(1, :, 1, :) = reshape(ca', 1, W, 1, H);
 
                     else
                         e(1, :, ll, :) ...
                             = reshape( ...
                                       squeeze(hc(jj, ll - 1, :, :))', ...
-                                      1, W, 1, L ...
+                                      1, W, 1, H ...
                                      );
 
                     end  % End of if 1 == ll
@@ -343,7 +349,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                         e(kk, :, 1, :) ...
                             = reshape( ...
                                       squeeze(vc(jj, kk - 1, :, :))', ...
-                                      1, W, 1, L ...
+                                      1, W, 1, H ...
                                      );
 
                     else
@@ -356,7 +362,7 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
                                                  :, ...
                                                  : ...
                                                 ))', ...
-                                      1, W, 1, L ...
+                                      1, W, 1, H ...
                                      );
 
                     end  % End of if 1 == ll
@@ -365,35 +371,35 @@ function f = IUFWT_2(ac, vc, hc, dc, w, fi, scaling)
 
                 ++ll;
 
-            end  % End of while filtNo >= ll
+            end  % End of while filt_no >= ll
 
             ++kk;
 
-        end  % End of while filtNo >= kk
+        end  % End of while filt_no >= kk
 
         % Reconstruct columns
         kk = 1;
-        while filtNo >= kk
+        while filt_no >= kk
             ie = comp_iatrousfilterbank_td( ...
                                            squeeze(e(kk, :, :, :)), ...
                                            gMat, ...
                                            filtUps, ...
                                            offset ...
                                           )';
-            d(:, kk, :) = reshape(ie, L, 1, W);
+            d(:, kk, :) = reshape(ie, H, 1, W);
 
             ++kk;
 
-        end  % End of while filtNo >= kk
+        end  % End of while filt_no >= kk
 
         ca = comp_iatrousfilterbank_td(d, gMat, filtUps, offset);
 
         ++jj;
 
-    end  % End of while fi >= jj
+    end  % End of while fbi >= jj
 
     % Copy to the output.
-    f = ca;
+    rpd = ca;
 
 end  % End of function IUFWT_2
 

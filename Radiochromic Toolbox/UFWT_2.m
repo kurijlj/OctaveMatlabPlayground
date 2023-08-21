@@ -1,43 +1,43 @@
-function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
+function [ac, vc, hc, dc, info] = UFWT_2(pd, wt, fbi, scaling)
     % --------------------------------------------------------------------------
     %
-    % Function: UFWT_2(f, w, fi, scaling)
+    % Function: UFWT_2(pd, w, fbi, scaling)
     %
     % --------------------------------------------------------------------------
     %
     % Use:
-    %       -- [ac, vc, hc, dc, info] = UFWT_2(f, w, fi)
-    %       -- [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
+    %       -- [ac, vc, hc, dc, info] = UFWT_2(pd, wt, fbi)
+    %       -- [ac, vc, hc, dc, info] = UFWT_2(pd, wt, fbi, scaling)
     %
     % Description:
-    %       Compute the 2D undecimated wavelet transform of a 2D image f using
-    %       the wavelet w and the number of filterbank iterations fi.
+    %       Compute the 2D undecimated wavelet transform of a monochrome image
+    %       pd using the wavelet w and the number of filterbank iterations fbi.
     %
     % Function parameters:
-    %       -- f: 2D image
-    %       -- w: wavelet filterbank
-    %       -- fi: number of filterbank iterations
+    %       -- pd: 2D image
+    %       -- wt: wavelet filterbank
+    %       -- fbi: number of filterbank iterations
     %       -- scaling: filter scaling flag (default: 'sqrt')
     %
     %       Note: For more information on the input parameters, please refer to
     %       the documentation of the ufwt function of the ltfat package.
     %
     % Return:
-    %       -- ac: residual approximation coefficients stored in L x W matrix.
+    %       -- ac: residual approximation coefficients stored in H x W matrix.
     %       -- vc: vertical detail coefficients stored in
-    %             fi x (filtNo - 1) x L x W matrix.
+    %             fbi x (filt_no - 1) x H x W matrix.
     %       -- hc: horizontal detail coefficients stored in
-    %             fi x (filtNo - 1) x L x W matrix.
+    %             fbi x (filt_no - 1) x H x W matrix.
     %       -- dc: diagonal detail coefficients stored in
-    %             fi x (filtNo - 1) x (filtNo - 1) x L x W matrix.
+    %             fbi x (filt_no - 1) x (filt_no - 1) x H x W matrix.
     %       -- info: Transform parameters structure.
     %
     % Required packages:
     %       -- ltfat (http://ltfat.org)
     %
     % Example:
-    %       -- [ac, vc, hc, dc, info] = UFWT_2(f, w, fi)
-    %       -- [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, 'sqrt')
+    %       -- [ac, vc, hc, dc, info] = UFWT_2(pd, wt, fbi)
+    %       -- [ac, vc, hc, dc, info] = UFWT_2(pd, wt, fbi, 'sqrt')
     %
     % Copyright (C) 2005-2022 Peter L. Soendergaard <peter@sonderport.dk>
     % and others.
@@ -61,11 +61,11 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
     % --------------------------------------------------------------------------
 
     fname = 'UFWT_2';
-    use_case_a = sprintf(' -- [ac, vc, hc, dc, info] = %s(f, w, fi)', fname);
+    use_case_a = sprintf(' -- [ac, vc, hc, dc, info] = %s(pd, wt, fbi)', fname);
     use_case_b = sprintf( ...
                          cstrcat( ...
                                  ' -- [ac, vc, hc, dc, info] = ', ...
-                                 '%s(f, w, fi, scaling)' ...
+                                 '%s(pd, wt, fbi, scaling)' ...
                                 ), ...
                          fname ...
                         );
@@ -89,7 +89,7 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
 
     % Validate input signal format
     validateattributes( ...
-                       f, ...
+                       pd, ...
                        {'float'}, ...
                        { ...
                         '2d', ...
@@ -98,12 +98,12 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
                         'nonnan' ...
                        }, ...
                        fname, ...
-                       'f' ...
+                       'pd' ...
                       );
 
     % Validate value(s) supplied for the wavelet filterbank definition
     try
-        w = fwtinit(w);
+        wt = fwtinit(wt);
 
     catch err
         error('%s: %s', fname, err.message);
@@ -114,19 +114,19 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
     % wavelet filters? If your filterbank has different subsampling factors
     % after first two filters, please send a feature request.
     assert( ...
-           w.a(1) == w.a(2), ...
+           wt.a(1) == wt.a(2), ...
            cstrcat( ...
-                   'First two elements of a vector w.a are not equal. ', ...
+                   'First two elements of a vector wt.a are not equal. ', ...
                    'Such wavelet filterbank is not suported.' ...
                   ) ...
           );
 
     % For holding the time-reversed, complex conjugate impulse responses.
-    filtNo = length(w.h);
+    filt_no = length(wt.h);
 
     % Validate value supplied for the number of filterbank iterations
     validateattributes( ...
-                       fi, ...
+                       fbi, ...
                        {'numeric'}, ...
                        { ...
                         'scalar', ...
@@ -138,7 +138,7 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
                         '>=', 1 ...
                        }, ...
                        fname, ...
-                       'fi' ...
+                       'fbi' ...
                       );
 
     % Set default value for the filter scaling if not supplied
@@ -156,7 +156,7 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
                   );
 
     %  Verify length of the input signal ---------------------------------------
-    if 2 > size(f, 1) || 2 > size(f, 2)
+    if 2 > size(pd, 1) || 2 > size(pd, 2)
         error( ...
               sprintf( ...
                       cstrcat( ...
@@ -167,56 +167,61 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
                      ) ...
              );
 
-    end  % End of if 2 > size(f, 1) || 2 > size(f, 2)
+    end  % End of if 2 > size(pd, 1) || 2 > size(pd, 2)
 
     % Run computation ----------------------------------------------------------
 
     % Optionally scale the filters
-    h = comp_filterbankscale(w.h(:), w.a(:), scaling);
+    h = comp_filterbankscale(wt.h(:), wt.a(:), scaling);
 
     % Change format to a matrix
-    hMat = cell2mat(cellfun(@(hEl) hEl.h(:), h(:)', 'UniformOutput', 0));
+    h_mat = cell2mat(cellfun(@(hEl) hEl.h(:), h(:)', 'UniformOutput', 0));
 
     % Delays
-    hOffset = cellfun(@(hEl) hEl.offset, h(:));
+    h_offset = cellfun(@(hEl) hEl.offset, h(:));
 
     % Allocate output and mid result
-    [L, W] = size(f);
-    ac = f;
-    b = zeros(filtNo, W, filtNo, L, assert_classname(f, hMat));
-    vc = zeros(fi, filtNo - 1, L, W, assert_classname(f, hMat));
-    hc = zeros(fi, filtNo - 1, L, W, assert_classname(f, hMat));
-    dc = zeros(fi, filtNo - 1, filtNo - 1, L, W, assert_classname(f, hMat));
+    [H, W] = size(pd);
+    ac = pd;
+    b =  zeros(filt_no, W, filt_no, H, assert_classname(pd, h_mat));
+    vc = zeros(fbi, filt_no - 1, H, W, assert_classname(pd, h_mat));
+    hc = zeros(fbi, filt_no - 1, H, W, assert_classname(pd, h_mat));
+    dc = zeros( ...
+               fbi, filt_no - 1, ...
+               filt_no - 1, ...
+               H, W, ...
+               assert_classname(pd, h_mat) ...
+              );
 
-    runPtr = fi;
+    runPtr = fbi;
     jj = 1;
-    while fi >= jj
+    while fbi >= jj
         % Zero index position of the upsampled filters.
-        offset = w.a(1)^(jj - 1) .* (hOffset);
+        offset = wt.a(1)^(jj - 1) .* (h_offset);
 
         % Run filterbank
         % First run on columns
-        ac = comp_atrousfilterbank_td(ac, hMat, w.a(1)^(jj - 1), offset);
+        ac = comp_atrousfilterbank_td(ac, h_mat, wt.a(1)^(jj - 1), offset);
         % Run on rows
         kk = 1;
-        while filtNo >= kk
+        while filt_no >= kk
             b(kk, :, :, :) = ...
                 comp_atrousfilterbank_td( ...
                                          squeeze(ac(:, kk, :))', ...
-                                         hMat, ...
-                                         w.a(1)^(jj - 1), ...
+                                         h_mat, ...
+                                         wt.a(1)^(jj - 1), ...
                                          offset ...
                                         );
 
             ++kk;
 
-        end  % End of while filtNo >= kk
+        end  % End of while filt_no >= kk
 
         % Bokkeeping
         kk = 1;
-        while filtNo >= kk
+        while filt_no >= kk
             ll = 1;
-            while filtNo >= ll
+            while filt_no >= ll
                 if 1 == kk
                     if 1 == ll
                         ac = squeeze(b(1, :, 1, :))';
@@ -242,22 +247,22 @@ function [ac, vc, hc, dc, info] = UFWT_2(f, w, fi, scaling)
 
                 ++ll;
 
-            end  % End of while filtNo >= ll
+            end  % End of while filt_no >= ll
 
             ++kk;
 
-        end  % End of while filtNo >= kk
+        end  % End of while filt_no >= kk
 
         --runPtr;
         ++jj;
 
-    end  % End of while fi >= jj
+    end  % End of while fbi >= jj
 
     % Optionally : Fill info struct --------------------------------------------
     if nargout > 4
-        info.fname = 'ufwt2';
-        info.wt = w;
-        info.J = fi;
+        info.fname = 'UFWT_2';
+        info.wt = wt;
+        info.J = fbi;
         info.scaling = scaling;
 
     end  % End of if nargout > 1
