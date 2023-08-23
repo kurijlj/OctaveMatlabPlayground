@@ -10,7 +10,7 @@ function [red_ns, green_ns, blue_ns] = UFWT_Image_Noise_Estimate(pd)
     %
     % Description:
     %        Estimate the noise in the red, green and blue channels of an image
-    %        using the undecimated forward wavelet transform (UFWT).
+    %        using the undecimated fast wavelet transform (UFWT).
     %
     % Function parameters:
     %        -- pd: a 3D array containing the pixel data of an image.
@@ -24,7 +24,7 @@ function [red_ns, green_ns, blue_ns] = UFWT_Image_Noise_Estimate(pd)
     %                    color channel of the image.
     %
     % Example:
-    %        -- [red_ns, green_ns, blue_ns] = UFWT_Image_Noise_Estimate(pd)
+    %        >> [red_ns, green_ns, blue_ns] = UFWT_Image_Noise_Estimate(pd)
     %
     % (C) Copyright 2023 Ljubomir Kurij <ljubomir_kurij@protonmail.com>
     % This file is part of Radiochromic Toolbox version 0.1.0
