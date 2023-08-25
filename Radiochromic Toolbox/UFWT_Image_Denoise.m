@@ -21,7 +21,7 @@ function dpd = UFWT_Image_Denoise(varargin)
     %                       noise and signal.
     %       -- 'Wavelet':   string, def. 'spline1:1'
     %                       Wavelet used for the decomposition.
-    %       -- 'Level':     integer, def. 0
+    %       -- 'Level':     integer, def. 3
     %                       Number of decomposition levels.
     %
     % Return:
@@ -57,7 +57,7 @@ function dpd = UFWT_Image_Denoise(varargin)
                       varargin, ...
                       'Threshold', 'hard', ...
                       'Wavelet', 'spline1:1', ...
-                      'Level', 0 ...
+                      'Level', 3 ...
                      );
 
     % Check the number of mandatory parameters ---------------------------------
@@ -73,7 +73,7 @@ function dpd = UFWT_Image_Denoise(varargin)
 
     % Validate values supplied for the mandatory parameters --------------------
     validateattributes( ...
-                       pd, ...
+                       pos{1}, ...
                        {'numeric'}, ...
                        { ...
                         '3d', ...
@@ -106,7 +106,8 @@ function dpd = UFWT_Image_Denoise(varargin)
                         'integer', ...
                         'nonnegative', ...
                         'finite', ...
-                        'nonnan' ...
+                        'nonnan', ...
+                        '>', 0 ...
                        }, ...
                        fname, ...
                        'level' ...
@@ -126,9 +127,12 @@ function dpd = UFWT_Image_Denoise(varargin)
 
     % Do the computation -------------------------------------------------------
 
+    pd = double(pos{1});
+
     % Estimate the noise variance
     [red_ns, green_ns, blue_ns] = UFWT_Image_Noise_Estimate(pd);
     ns = [red_ns, green_ns, blue_ns];
+    clear('red_ns', 'green_ns', 'blue_ns');
 
     % Allocate memory for the resulting signal estimate
     dpd = zeros(size(pd));
@@ -137,9 +141,17 @@ function dpd = UFWT_Image_Denoise(varargin)
     k = 1;
     while 3 >= k
         [A, H, V, D] = UFWT_2(pd(:, :, k), wt, level);
-        V = V .* (V > ns(k) * sqrt(2 * log(numel(V))));
-        H = H .* (H > ns(k) * sqrt(2 * log(numel(H))));
-        D = D .* (D > ns(k) * sqrt(2 * log(numel(D))));
+        if 'hard' == threshold
+            V = V .* (V > ns(k) * sqrt(2 * log(numel(V))));
+            H = H .* (H > ns(k) * sqrt(2 * log(numel(H))));
+            D = D .* (D > ns(k) * sqrt(2 * log(numel(D))));
+
+        else
+            V = sign(V) .* max(abs(V) - ns(k) * sqrt(2 * log(numel(V))), 0);
+            H = sign(H) .* max(abs(H) - ns(k) * sqrt(2 * log(numel(H))), 0);
+            D = sign(D) .* max(abs(D) - ns(k) * sqrt(2 * log(numel(D))), 0);
+
+        end  % End of 'if 'hard' == threshold'
 
         dpd(:, :, k) = IUFWT_2(A, H, V, D, wt, level);
 
