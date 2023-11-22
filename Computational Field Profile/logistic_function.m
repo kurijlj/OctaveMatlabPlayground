@@ -1,30 +1,30 @@
-function l = logistic_function(x, L, k, x0)
-%% -----------------------------------------------------------------------------
-%%
-%% Function: logistic_function(x, L, k, x0)
-%%
-%% -----------------------------------------------------------------------------
-%
-%% Use:
-%       - l = logistic_function(x, L, k, x0)
-%
-%% Description:
-%       Compute the logistic function
-%
-%% Function parameters:
-%       - x:    x values
-%       - L:    maximum value
-%       - k:    steepness
-%       - x0:   x value of the sigmoid's midpoint
-%
-%% Examples:
-%       - l = logisitc_function(x, L, k, x0)
-%
-%% (C) Copyright 2023 Ljubomir Kurij
-%
-%% -----------------------------------------------------------------------------
-    fname = 'logistic_function';
-    use_case_a = sprintf('%s(x, L, k, x0)', fname);
+function y = Logistic_Function(x, l, k, x_zero)
+    %% -------------------------------------------------------------------------
+    %%
+    %% Function: Logistic_Function(x, l, k, x_zero)
+    %%
+    %% -------------------------------------------------------------------------
+    %
+    %% Use:
+    %       - y = Logistic_Function(x, l, k, x_zero)
+    %
+    %% Description:
+    %       Compute the logistic function
+    %
+    %% Function parameters:
+    %       - x:   x values
+    %       - l:   maximum value
+    %       - k:   steepness
+    %       - x_zero: x value of the sigmoid's midpoint
+    %
+    %% Examples:
+    %       - y = logisitc_function(x, l, k, x_zero)
+    %
+    %% (C) Copyright 2023 Ljubomir Kurij
+    %
+    %% -------------------------------------------------------------------------
+    fname = 'Logistic_Function';
+    use_case_a = sprintf('- y = %s(x, l, k, x_zero)', fname);
 
     % Check input arguments ----------------------------------------------------
 
@@ -38,34 +38,33 @@ function l = logistic_function(x, L, k, x0)
     end  % End of if 4 ~= nargin
 
     % Check the type of input arguments
-    validateattributes(
+    validateattributes( ...
                        x, ...
                        {'numeric'}, ...
-                       % {'vector', 'nonempty', 'real', 'finite'}, ...
                        {'nonempty', 'real', 'finite'}, ...
                        fname, ...
                        'x' ...
                       );
-    validateattributes(
-                       L, ...
+    validateattributes( ...
+                       l, ...
                        {'numeric'}, ...
                        {'scalar', 'nonempty', 'real', 'finite', '>', 0}, ...
                        fname, ...
-                       'L' ...
+                       'l' ...
                       );
-    validateattributes(
+    validateattributes( ...
                        k, ...
                        {'numeric'}, ...
                        {'scalar', 'nonempty', 'real', 'finite'}, ...
                        fname, ...
                        'k' ...
                       );
-    validateattributes(
-                       x0, ...
+    validateattributes( ...
+                       x_zero, ...
                        {'numeric'}, ...
                        {'scalar', 'nonempty', 'real', 'finite'}, ...
                        fname, ...
-                       'x0' ...
+                       'x_zero' ...
                       );
 
     % Do the calculations ------------------------------------------------------
@@ -74,8 +73,8 @@ function l = logistic_function(x, L, k, x0)
     %       curve, use the following formula:
     %           k = 2*log(95/5)/width
 
-    l = L./(1 + exp(-k*(x-x0)));
+    y = l ./ (1 + exp(-k * (x - x_zero)));
 
-end  % End of function logistic_function
+end  % End of function Logistic_Function
 
-% End of file 'logistic_function.m'
+% End of file 'Logistic_Function.m'
