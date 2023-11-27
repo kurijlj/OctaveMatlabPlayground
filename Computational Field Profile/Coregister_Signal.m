@@ -78,7 +78,7 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
                        'y_target', ...
                        4 ...
                       );
-    
+
     % Check the size of the input arguments
     if length(x_ref) ~= length(y_ref)
         error( ...
@@ -114,7 +114,7 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
     x_target_r = x_target;
     if diff(x_ref)(1) < diff(x_target)(1)
         x_target_r = x_target(1):x_ref(2) - x_ref(1):x_target(end);
-    else if diff(x_ref)(1) > diff(x_target)(1)
+    elseif diff(x_ref)(1) > diff(x_target)(1)
         x_ref_r = x_ref(1):x_target(2) - x_target(1):x_ref(end);
     end  % End of if diff(x_ref)(1) < diff(x_target)(1)
 
@@ -156,7 +156,7 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
           'x_max', ...
           'x_ref', ...
           'x_target' ...
-        );
+         );
 
     % Compute the sum of squared differences (SSD) between the reference
     % and target signals for all possible shifts of the target signal
@@ -176,7 +176,7 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
         y_target_shifted = Shift_Signal(x_common, y_target, step * idx);
         x_shift(floor(length(x_common) / 2) - idx) = step * idx;
         y_ssd(floor(length(x_common) / 2) - idx) = ...
-            sum((y_ref - y_target_shifted) .^ 2);
+            sum((y_ref - y_target_shifted).^2);
         idx = idx + 1;
         subplot(2, 1, 1);
         plot(x_common, y_ref, 'b', x_common, y_target_shifted, 'r');
@@ -192,7 +192,7 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
         y_target_shifted = Shift_Signal(x_common, y_target, step * idx);
         x_shift(floor(length(x_common) / 2) + idx) = step * idx;
         y_ssd(floor(length(x_common) / 2) + idx) = ...
-            sum((y_ref - y_target_shifted) .^ 2);
+            sum((y_ref - y_target_shifted).^2);
         idx = idx + 1;
         subplot(2, 1, 1);
         plot(x_common, y_ref, 'b', x_common, y_target_shifted, 'r');
@@ -202,7 +202,7 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
     end  % End of while floor(length(x_common) / 2) + step <= length(x_common)
 
     % Find the shift that minimizes the SSD
-    [~, i_min] = min(y_ssd)
+    [~, i_min] = min(y_ssd);
     x_off = x_shift(i_min);
 
 end  % End of function Coregister_Signal
