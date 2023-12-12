@@ -84,8 +84,8 @@ function ys = Shift_Signal(x, y, shift)
     end  % End of if any(diff(x) <= 0)
 
     % shift must not exceed the maximum absciisa span
-    if abs(shift) > (x(end) - x(1))
-        error('shift must not exceed the maximum absciisa span.');
+    if shift < x(1) - x(end) && shift > x(end) - x(1)
+        error('shift must not exceed the maximum abscissa span.');
 
     end  % End of if abs(shift) > (x(end) - x(1))
 
@@ -100,9 +100,11 @@ function ys = Shift_Signal(x, y, shift)
     % Shift the signal y
     if y_step_shift > 0
         ys = [y(1) .* ones(1, abs(y_step_shift)), y(1:end - y_step_shift)];
+        ys = ys(1:length(y));
 
     elseif y_step_shift < 0
         ys = [y(1 - y_step_shift:end), y(end) .* ones(1, abs(y_step_shift))];
+        ys = ys(length(ys) - length(y) + 1:end);
 
     else
         ys = y;

@@ -105,11 +105,17 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
 
     % Do the computation -------------------------------------------------------
 
-    % Resample abscissas of the reference and target signals
+    % Resample abscissas of the reference and target signals. In the case of
+    % abscissa values not being equally spaced, resample them to equally spaced
+    % abscissa values.
     x_ref = Resample_Abscissa(x_ref);
     x_target = Resample_Abscissa(x_target);
 
-    % Resample the abscissas to the signal with the smallest sampling interval
+    % Resample the abscissas of the reference and target signals to the common
+    % (i.e. smallest) sampling interval. This is done to avoid the situation
+    % where the reference and target signals have different sampling intervals
+    % and to avoid the error in the computation of the SSD (sum of squared
+    % differences)
     x_ref_r = x_ref;
     x_target_r = x_target;
     if diff(x_ref)(1) < diff(x_target)(1)
@@ -119,18 +125,23 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
     end  % End of if diff(x_ref)(1) < diff(x_target)(1)
 
     % Resample the ordinates of the reference and target signals
-    y_ref = interp1(x_ref, y_ref, x_ref_r, 'spline');
-    y_target = interp1(x_target, y_target, x_target_r, 'spline');
+    y_ref = interp1(x_ref, y_ref, x_ref_r);  % Does the linear interpolation
+    y_target = interp1(x_target, y_target, x_target_r);  % Does the linear
+                                                         % interpolation
     x_ref = x_ref_r;
     x_target = x_target_r;
+
+    % Clear the variables that are no longer needed
     clear('x_ref_r', 'x_target_r');
 
-    % Extrapolate the ordinates of the reference and target signals
-    % to the same abscissa range (i.e. the union of the abscissa ranges)
+    % Calculate the common abscissa range (i.e. the union of the abscissa
+    % ranges)
     x_min = min([x_ref(1), x_target(1)]);
     x_max = max([x_ref(end), x_target(end)]) + x_ref(2) - x_ref(1);
     x_common = x_min:x_ref(2) - x_ref(1):x_max;
 
+    % Extrapolate the ordinate of the reference signal to the
+    % common abscissa range
     y_left = find(x_common > x_ref(1), 1) - 1;
     y_right = find(x_common > x_ref(1), 1) + length(y_ref) - 1;
     y_ref_r = ones(1, length(x_common));
@@ -138,6 +149,8 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
     y_ref_r(y_left + 1:y_right) = y_ref(:);
     y_ref_r(y_right + 1:end) = y_ref_r(y_right + 1:end) .* y_ref(end);
 
+    % Extrapolate the ordinate of the target signal to the
+    % common abscissa range
     y_left = find(x_common > x_target(1), 1) - 1;
     y_right = find(x_common > x_target(1), 1) + length(y_target) - 1;
     y_target_r = ones(1, length(x_common));
@@ -145,8 +158,11 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
     y_target_r(y_left + 1:y_right) = y_target(:);
     y_target_r(y_right + 1:end) = y_target_r(y_right + 1:end) .* y_target(end);
 
+    % Re-bound resampled values to the original variable names
     y_ref = y_ref_r;
     y_target = y_target_r;
+
+    % Clear the variables that are no longer needed
     clear( ...
           'y_ref_r', ...
           'y_target_r', ...
@@ -158,48 +174,34 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
           'x_target' ...
          );
 
+    % Calculate the full span of the shifts of the target signal relative to
+    % the reference signal
+    shift_step = x_common(2) - x_common(1);
+    shift_min = x_common(1) - x_common(end);
+    shift_max = x_common(end) - x_common(1);
+    x_shift = shift_min:shift_step:shift_max;
+    y_ssd = zeros(1, length(x_shift));
+
+    % Clear the variables that are no longer needed
+    clear('shift_min', 'shift_max', 'shift_step');
+
     % Compute the sum of squared differences (SSD) between the reference
     % and target signals for all possible shifts of the target signal
     % relative to the reference signal
-    x_shift = zeros(1, length(x_common));
-    y_ssd = zeros(1, length(x_common));
-    subplot(2, 1, 1);
-    plot(x_common, y_ref, 'b', x_common, y_target, 'r');
-    subplot(2, 1, 2);
-    plot(x_common, y_ssd, 'k');
-    pause(0.05);
-
-    % Compute the SSD for all possible shifts to the left
-    idx = 0;
-    step = -1 * (x_common(2) - x_common(1));
-    while floor(length(x_common) / 2) - idx > 0
-        y_target_shifted = Shift_Signal(x_common, y_target, step * idx);
-        x_shift(floor(length(x_common) / 2) - idx) = step * idx;
-        y_ssd(floor(length(x_common) / 2) - idx) = ...
-            sum((y_ref - y_target_shifted).^2);
-        idx = idx + 1;
-        subplot(2, 1, 1);
-        plot(x_common, y_ref, 'b', x_common, y_target_shifted, 'r');
-        subplot(2, 1, 2);
-        plot(x_common, y_ssd, 'k');
-        pause(0.05);
-    end  % End of while floor(length(x_common) / 2) - step > 0
-
-    % Compute the SSD for all possible shifts to the right
     idx = 1;
-    step = x_common(2) - x_common(1);
-    while ceil(length(x_common) / 2) - idx + 1 > 0
-        y_target_shifted = Shift_Signal(x_common, y_target, step * idx);
-        x_shift(floor(length(x_common) / 2) + idx) = step * idx;
-        y_ssd(floor(length(x_common) / 2) + idx) = ...
-            sum((y_ref - y_target_shifted).^2);
+    while length(x_shift) >= idx
+        y_target_shifted = Shift_Signal(x_common, y_target, x_shift(idx));
+        y_ssd(idx) = sum((y_ref - y_target_shifted) .^ 2);
         idx = idx + 1;
+
+        % Plot live preview of the SSD calculation
         subplot(2, 1, 1);
         plot(x_common, y_ref, 'b', x_common, y_target_shifted, 'r');
         subplot(2, 1, 2);
-        plot(x_common, y_ssd, 'k');
-        pause(0.05);
-    end  % End of while floor(length(x_common) / 2) + step <= length(x_common)
+        plot(x_shift, y_ssd, 'k');
+        pause(0.001);
+
+    end  % End of while length(x_shift) >= idx
 
     % Find the shift that minimizes the SSD
     [~, i_min] = min(y_ssd);
