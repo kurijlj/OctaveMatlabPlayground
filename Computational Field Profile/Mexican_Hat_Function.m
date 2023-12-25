@@ -75,8 +75,8 @@ function y = Mexican_Hat_Function(x, x_max, y_max, x_min)
                       );
 
     % Do the calculation -------------------------------------------------------
-    y = y_max .* (1 - (x - x_max).^2) ...
-        .* exp(-(x - x_max).^2./(x_max - x_min)^2);
+    y = y_max .* (1 - (x - x_max).^2) .* ...
+        exp(-(x - x_max).^2 ./ (x_max - x_min)^2);
 
 end  % End of function Mexican_Hat_Function
 
