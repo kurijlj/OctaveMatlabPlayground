@@ -9,7 +9,7 @@ function y = Logistic_Function(x, l, k, x_zero)
     %       - y = Logistic_Function(x, l, k, x_zero)
     %
     %% Description:
-    %       Compute the logistic function
+    %       Compute the logistic function.
     %
     %% Function parameters:
     %       - x:   x values
@@ -69,7 +69,7 @@ function y = Logistic_Function(x, l, k, x_zero)
 
     % Do the calculations ------------------------------------------------------
 
-    % NOTE: To determine the steepness of the curve, gor the given width of the
+    % NOTE: To determine the steepness of the curve, for the given width of the
     %       curve, use the following formula:
     %           k = 2*log(95/5)/width
 

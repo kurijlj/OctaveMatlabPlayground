@@ -125,9 +125,8 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
     end  % End of if diff(x_ref)(1) < diff(x_target)(1)
 
     % Resample the ordinates of the reference and target signals
-    y_ref = interp1(x_ref, y_ref, x_ref_r);  % Does the linear interpolation
-    y_target = interp1(x_target, y_target, x_target_r);  % Does the linear
-                                                         % interpolation
+    y_ref = interp1(x_ref, y_ref, x_ref_r);
+    y_target = interp1(x_target, y_target, x_target_r);
     x_ref = x_ref_r;
     x_target = x_target_r;
 
@@ -191,7 +190,7 @@ function x_off = Coregister_Signal(x_ref, y_ref, x_target, y_target)
     idx = 1;
     while length(x_shift) >= idx
         y_target_shifted = Shift_Signal(x_common, y_target, x_shift(idx));
-        y_ssd(idx) = sum((y_ref - y_target_shifted) .^ 2);
+        y_ssd(idx) = sum((y_ref - y_target_shifted).^2);
         idx = idx + 1;
 
         % Plot live preview of the SSD calculation

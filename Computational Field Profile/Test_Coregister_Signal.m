@@ -8,7 +8,7 @@
 
 % Define the logistic function
 lf1 = @(x, x_zero) 1 ./ (1 + exp(-1.73 .* (x - x_zero)));
-lf2 = @(x, x_zero) 1 ./ (1 + exp(-(1.73/1.5) .* (x - x_zero)));
+lf2 = @(x, x_zero) 1 ./ (1 + exp(-(1.73 / 1.5) .* (x - x_zero)));
 
 % Define the reference signal for the logistic function
 rs = linspace(0, 10, 201)';
@@ -36,26 +36,26 @@ ts3(:, 2) = lf2(ts3(:, 1), 5);
 
 % Test the Coregister_Signal function with the first test signal.
 figure;
-Coregister_Signal(rs(:, 1), rs(:, 2), ts1(:, 1), ts1(:, 2))
+Coregister_Signal(rs(:, 1), rs(:, 2), ts1(:, 1), ts1(:, 2));
 
 % Test in the reverse order.
 figure;
-Coregister_Signal(ts1(:, 1), ts1(:, 2), rs(:, 1), rs(:, 2))
+Coregister_Signal(ts1(:, 1), ts1(:, 2), rs(:, 1), rs(:, 2));
 
 % Test the Coregister_Signal function with the second test signal.
 figure;
-Coregister_Signal(rs(:, 1), rs(:, 2), ts2(:, 1), ts2(:, 2))
+Coregister_Signal(rs(:, 1), rs(:, 2), ts2(:, 1), ts2(:, 2));
 
 % Test in the reverse order.
 figure;
-Coregister_Signal(ts2(:, 1), ts2(:, 2), rs(:, 1), rs(:, 2))
+Coregister_Signal(ts2(:, 1), ts2(:, 2), rs(:, 1), rs(:, 2));
 
 % Test the Coregister_Signal function with the third test signal.
 figure;
-Coregister_Signal(rs(:, 1), rs(:, 2), ts3(:, 1), ts3(:, 2))
+Coregister_Signal(rs(:, 1), rs(:, 2), ts3(:, 1), ts3(:, 2));
 
 % Test in the reverse order.
 figure;
-Coregister_Signal(ts3(:, 1), ts3(:, 2), rs(:, 1), rs(:, 2))
+Coregister_Signal(ts3(:, 1), ts3(:, 2), rs(:, 1), rs(:, 2));
 
 % End of file Test_Corregister_Signal.m
