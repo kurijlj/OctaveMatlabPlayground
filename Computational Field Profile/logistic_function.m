@@ -18,9 +18,10 @@ function y = Logistic_Function(x, l, k, x_zero)
     %       - x_zero: x value of the sigmoid's midpoint
     %
     %% Examples:
-    %       - y = logisitc_function(x, l, k, x_zero)
+    %       - y = Logisitc_Function(0, 1, sqrt(2), 0)
+    %       - y = Logisitc_Function([-1, 0, 1], 1, sqrt(2), 1)
     %
-    %% (C) Copyright 2023 Ljubomir Kurij
+    %% (C) Copyright 2023 Ljubomir Kurij <ljubomir_kurij@protonmail.com>
     %
     %% -------------------------------------------------------------------------
     fname = 'Logistic_Function';
